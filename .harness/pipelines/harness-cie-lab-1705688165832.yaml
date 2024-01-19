@@ -169,3 +169,4 @@ pipeline:
       description: ""
       required: true
       value: <+input>
+  allowStageExecutions: true
