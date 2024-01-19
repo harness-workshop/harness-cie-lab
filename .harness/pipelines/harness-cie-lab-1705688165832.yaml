@@ -6,9 +6,9 @@ pipeline:
   properties:
     ci:
       codebase:
-        build: <+input>
         connectorRef: account.workshopgithub
         repoName: harness-cie-lab
+        build: <+input>
   stages:
     - stage:
         identifier: build
@@ -18,20 +18,63 @@ pipeline:
           execution:
             steps:
               - step:
-                  identifier: dockerbuild
-                  name: docker_build
+                  type: RunTests
+                  name: RunTests_1
+                  identifier: RunTests_1
                   spec:
-                    image: plugins/docker
-                    settings:
-                      dry_run: "true"
-                      repo: hello/world
-                      tags: latest
-                  timeout: ""
-                  type: Plugin
-          platform:
-            arch: Amd64
-            os: Linux
-          runtime:
-            spec: {}
-            type: Cloud
+                    connectorRef: account.bootcampdockerhub
+                    image: nikpap/mvn-openjdk-8:harness
+                    language: Java
+                    buildTool: Maven
+                    args: test
+                    packages: com.nikp
+                    runOnlySelectedTests: true
+                    preCommand: cd payment-service
+                    reports:
+                      type: JUnit
+                      spec:
+                        paths:
+                          - "**/*.xml"
+                    imagePullPolicy: Always
+                    resources:
+                      limits:
+                        memory: 2Gi
+                        cpu: "2"
+                    enableTestSplitting: false
+              - step:
+                  type: Run
+                  name: Build
+                  identifier: Build
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    image: nikpap/mvn-openjdk-8:harness
+                    shell: Sh
+                    command: |-
+                      cd payment-service
+                      mvn -Dmaven.test.skip=true clean install -X
+                    resources:
+                      limits:
+                        memory: 1Gi
+                        cpu: "1"
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: pushToDockerHub
+                  identifier: pushToDockerHub
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    repo: nikpap/payment-service-workshop
+                    tags:
+                      - sid-1
+                    resources:
+                      limits:
+                        memory: 1Gi
+                        cpu: "1"
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: account.bootcampgkecluster
+              namespace: payment-service-build
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
         type: CI
