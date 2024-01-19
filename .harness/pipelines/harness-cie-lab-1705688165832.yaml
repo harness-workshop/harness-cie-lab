@@ -77,4 +77,7 @@ pipeline:
               automountServiceAccountToken: true
               nodeSelector: {}
               os: Linux
+          slsa_provenance:
+            enabled: false
         type: CI
+        description: ""
