@@ -11,36 +11,71 @@ pipeline:
         repoName: harness-cie-lab
   stages:
     - stage:
-        identifier: build
-        name: build
+        name: Build and push
+        identifier: Build_and_push
+        description: ""
+        type: CI
         spec:
           cloneCodebase: true
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: account.bootcampgkecluster
+              namespace: "payment-service-build "
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
           execution:
             steps:
               - step:
-                  identifier: echo
-                  name: echo
+                  type: RunTests
+                  name: Run Tests With Intelligence
+                  identifier: Run_Tests_With_Intelligence
                   spec:
-                    command: echo hello world
-                  timeout: ""
-                  type: Run
+                    connectorRef: account.bootcampdockerhub
+                    image: "nikpap/mvn-openjdk-8:harness "
+                    language: Java
+                    buildTool: Maven
+                    args: "test "
+                    packages: "com.nikp "
+                    runOnlySelectedTests: true
+                    preCommand: cd payment-service
+                    reports:
+                      type: JUnit
+                      spec:
+                        paths:
+                          - "**/*.xml"
+                    resources:
+                      limits:
+                        memory: 2Gi
+                        cpu: "2"
+                    enableTestSplitting: false
               - step:
-                  identifier: dockerbuild
-                  name: docker_build
+                  type: Run
+                  name: Build
+                  identifier: Build
                   spec:
-                    image: plugins/docker
-                    settings:
-                      dry_run: "true"
-                      password: <+input>
-                      repo: hello/world
-                      tags: latest
-                      username: <+input>
-                  timeout: ""
-                  type: Plugin
-          platform:
-            arch: Amd64
-            os: Linux
-          runtime:
-            spec: {}
-            type: Cloud
-        type: CI
+                    connectorRef: account.bootcampdockerhub
+                    image: "nikpap/mvn-openjdk-8:harness "
+                    shell: Sh
+                    command: |
+                      cd payment-service
+                      mvn -Dmaven.test.skip=true clean install -X
+                    resources:
+                      limits:
+                        memory: "1Gi "
+                        cpu: "1"
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: Push to DockerHub
+                  identifier: Push_to_DockerHub
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    repo: nikpap/payment-service-workshop
+                    tags:
+                      - ejaz-latest
+                    optimize: true
+                    resources:
+                      limits:
+                        memory: 1Gi
+                        cpu: "1"
