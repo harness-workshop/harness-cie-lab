@@ -104,5 +104,3 @@ spec:
             {{- end}}
         {{- end}}
         {{- end}}
-      nodeSelector:
-        cloud.google.com/gke-nodepool: deploy-pool
