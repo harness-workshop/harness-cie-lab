@@ -88,10 +88,10 @@ spec:
         imagePullPolicy: Always
         resources:
           limits:
-            cpu: 500m
+            cpu: 200m
             memory: 900Mi
           requests:
-            cpu: 500m
+            cpu: 200m
             memory: 900Mi
         envFrom:
         {{- if .Values.env.config}}
@@ -112,4 +112,4 @@ spec:
         {{- end}}
         {{- end}}
       nodeSelector:
-        cloud.google.com/gke-nodepool: deploy-pool  
+        cloud.google.com/gke-nodepool: deployment
