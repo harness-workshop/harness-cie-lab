@@ -86,13 +86,6 @@ spec:
         image: {{ .Values.image }}
         {{- if or .Values.env.config .Values.env.secrets}}
         imagePullPolicy: Always
-        resources:
-            limits:
-              cpu: 500m
-              memory: 2000Mi
-            requests:
-              cpu: 500m
-              memory: 2000Mi
         envFrom:
         {{- if .Values.env.config}}
         - configMapRef:
