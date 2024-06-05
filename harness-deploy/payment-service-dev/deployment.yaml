@@ -89,10 +89,10 @@ spec:
         resources:
           limits:
             cpu: 200m
-            memory: 900Mi
+            memory: 1200Mi
           requests:
             cpu: 200m
-            memory: 900Mi
+            memory: 1200Mi
         envFrom:
         {{- if .Values.env.config}}
         - configMapRef:
