@@ -112,4 +112,4 @@ spec:
         {{- end}}
         {{- end}}
       nodeSelector:
-        cloud.google.com/gke-nodepool: deploy-infra
+        cloud.google.com/gke-nodepool: build-infra
