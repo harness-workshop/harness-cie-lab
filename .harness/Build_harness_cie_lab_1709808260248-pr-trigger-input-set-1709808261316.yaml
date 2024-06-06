@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1709808260248-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1709808260248prtriggerinputset
+  orgIdentifier: lloyds96org
+  projectIdentifier: esin
+  pipeline:
+    identifier: Build_harness_cie_lab_1709808260248
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

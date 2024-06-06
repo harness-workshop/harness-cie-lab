@@ -1,0 +1,242 @@
+pipeline:
+  identifier: Build_harness_cie_lab_1706790246851
+  name: Sujoy_First_Pipeline
+  orgIdentifier: workshoptcscoe74org
+  projectIdentifier: Sujoy_Test_Harness
+  properties:
+    ci:
+      codebase:
+        build: <+input>
+        connectorRef: account.workshopgithub
+        repoName: harness-cie-lab
+  stages:
+    - stage:
+        identifier: build
+        name: build
+        spec:
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  type: RunTests
+                  name: RunTests_1
+                  identifier: RunTests_1
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    image: nikpap/mvn-openjdk-8:harness
+                    language: Java
+                    buildTool: Maven
+                    args: clean test
+                    packages: com.nikp
+                    runOnlySelectedTests: true
+                    preCommand: cd payment-service
+                    reports:
+                      type: JUnit
+                      spec:
+                        paths:
+                          - "**/*.xml"
+                    resources:
+                      limits:
+                        memory: 2GI
+                        cpu: "2"
+                    enableTestSplitting: false
+              - step:
+                  type: Run
+                  name: Build
+                  identifier: Build
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    image: nikpap/mvn-openjdk-8:harness
+                    shell: Sh
+                    command: |
+                      cd payment-service
+                      mvn -Dmaven.test.skip=true clean install -X
+                    resources:
+                      limits:
+                        memory: 1Gi
+                        cpu: "1"
+              - step:
+                  name: Fortify
+                  identifier: Fortify
+                  template:
+                    templateRef: account.fortify_scan
+                    versionLabel: v0.1
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushDockerRegistry_1
+                  identifier: BuildAndPushDockerRegistry_1
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    repo: nikpap/payment-service-workshop
+                    tags:
+                      - sujoybanerjee-latest
+                    resources:
+                      limits:
+                        memory: 1Gi
+                        cpu: "1"
+              - step:
+                  name: OWASP
+                  identifier: OWASP
+                  template:
+                    templateRef: account.OWASP
+                    versionLabel: "0.01"
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: account.bootcampgkecluster
+              namespace: payment-service-build
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
+        type: CI
+    - stage:
+        name: Approval
+        identifier: Approval
+        description: ""
+        type: Approval
+        spec:
+          execution:
+            steps:
+              - step:
+                  name: HarnessApproval
+                  identifier: HarnessApproval
+                  type: HarnessApproval
+                  timeout: 1d
+                  spec:
+                    approvalMessage: |-
+                      Please review the following information
+                      and approve the pipeline progression
+                    includePipelineExecutionHistory: true
+                    approvers:
+                      minimumCount: 1
+                      disallowPipelineExecutor: false
+                      userGroups:
+                        - WorkshopUsergroup
+                    isAutoRejectEnabled: false
+                    approverInputs: []
+        tags: {}
+    - stage:
+        name: k8_Deployment
+        identifier: k8_Deployment
+        description: ""
+        type: Deployment
+        spec:
+          deploymentType: Kubernetes
+          service:
+            serviceRef: paymentservice
+            serviceInputs:
+              serviceDefinition:
+                type: Kubernetes
+                spec:
+                  manifests:
+                    - manifest:
+                        identifier: templates
+                        type: K8sManifest
+                        spec:
+                          valuesPaths: <+input>
+                  artifacts:
+                    primary:
+                      primaryArtifactRef: <+input>
+                      sources: <+input>
+          environment:
+            environmentRef: org.dev
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: k8s
+          execution:
+            steps:
+              - step:
+                  type: HarnessApproval
+                  name: HarnessApproval_1
+                  identifier: HarnessApproval_1
+                  spec:
+                    approvalMessage: Please review the following information and approve the pipeline progression
+                    includePipelineExecutionHistory: true
+                    isAutoRejectEnabled: false
+                    approvers:
+                      userGroups:
+                        - WorkshopUsergroup
+                      minimumCount: 1
+                      disallowPipelineExecutor: false
+                    approverInputs: []
+                  timeout: 1d
+              - step:
+                  type: Policy
+                  name: Policy_1
+                  identifier: Policy_1
+                  spec:
+                    policySets:
+                      - <+pipeline.variables.policySet>
+                    type: Custom
+                    policySpec:
+                      payload: "{\"JAVA_OSS_CRITICAL_COUNT\": <variable>}"
+                  timeout: 10m
+              - stepGroup:
+                  name: Canary Deployment
+                  identifier: canaryDepoyment
+                  steps:
+                    - step:
+                        name: Canary Deployment
+                        identifier: canaryDeployment
+                        type: K8sCanaryDeploy
+                        timeout: 10m
+                        spec:
+                          instanceSelection:
+                            type: Count
+                            spec:
+                              count: 1
+                          skipDryRun: false
+                    - step:
+                        name: Canary Delete
+                        identifier: canaryDelete
+                        type: K8sCanaryDelete
+                        timeout: 10m
+                        spec: {}
+              - stepGroup:
+                  name: Primary Deployment
+                  identifier: primaryDepoyment
+                  steps:
+                    - step:
+                        name: Rolling Deployment
+                        identifier: rollingDeployment
+                        type: K8sRollingDeploy
+                        timeout: 10m
+                        spec:
+                          skipDryRun: false
+            rollbackSteps:
+              - step:
+                  name: Canary Delete
+                  identifier: rollbackCanaryDelete
+                  type: K8sCanaryDelete
+                  timeout: 10m
+                  spec: {}
+              - step:
+                  name: Rolling Rollback
+                  identifier: rollingRollback
+                  type: K8sRollingRollback
+                  timeout: 10m
+                  spec: {}
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
+  tags: {}
+  variables:
+    - name: seusername
+      type: String
+      description: ""
+      required: false
+      value: <+input>
+    - name: clientKey
+      type: String
+      description: ""
+      required: false
+      value: d8fe240d-b6ea-4c32-8dbb-c79a3a39de01
+    - name: policySet
+      type: String
+      description: ""
+      required: false
+      value: Criticals Now Allowed

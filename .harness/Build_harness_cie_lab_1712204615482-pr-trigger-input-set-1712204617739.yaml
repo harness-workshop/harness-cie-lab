@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1712204615482-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1712204615482prtriggerinputset
+  orgIdentifier: workshopvirtusain125org
+  projectIdentifier: nageswarab
+  pipeline:
+    identifier: Build_harness_cie_lab_1712204615482
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1710424867222-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1710424867222prtriggerinputset
+  orgIdentifier: jpmcworkshop110org
+  projectIdentifier: NicL
+  pipeline:
+    identifier: Build_harness_cie_lab_1710424867222
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

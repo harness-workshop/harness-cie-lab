@@ -1,0 +1,7 @@
+environment:
+  name: DEV
+  identifier: DEV
+  accountId: IFG41DWvSnaRLOVNB2uesg
+  orgIdentifier: lloyds96org
+  projectIdentifier: derek
+  type: PreProduction

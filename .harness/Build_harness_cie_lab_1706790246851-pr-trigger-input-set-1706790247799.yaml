@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1706790246851-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1706790246851prtriggerinputset
+  orgIdentifier: workshoptcscoe74org
+  projectIdentifier: Sujoy_Test_Harness
+  pipeline:
+    identifier: Build_harness_cie_lab_1706790246851
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

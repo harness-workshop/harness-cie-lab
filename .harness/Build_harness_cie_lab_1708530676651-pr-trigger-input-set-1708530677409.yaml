@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1708530676651-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1708530676651prtriggerinputset
+  orgIdentifier: marriott88org
+  projectIdentifier: marriottobula
+  pipeline:
+    identifier: Build_harness_cie_lab_1708530676651
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

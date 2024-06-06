@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1711392122937-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1711392122937pushtriggerinputset
+  orgIdentifier: nationwide117org
+  projectIdentifier: ferrs19
+  pipeline:
+    identifier: Build_harness_cie_lab_1711392122937
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

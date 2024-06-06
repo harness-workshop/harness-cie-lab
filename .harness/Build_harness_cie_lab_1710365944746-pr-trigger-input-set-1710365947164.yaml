@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1710365944746-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1710365944746prtriggerinputset
+  orgIdentifier: dishitplatformeng108org
+  projectIdentifier: kunaltestproject
+  pipeline:
+    identifier: Build_harness_cie_lab_1710365944746
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

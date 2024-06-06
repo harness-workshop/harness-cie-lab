@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1710365944746-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1710365944746pushtriggerinputset
+  orgIdentifier: dishitplatformeng108org
+  projectIdentifier: kunaltestproject
+  pipeline:
+    identifier: Build_harness_cie_lab_1710365944746
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

@@ -1,0 +1,37 @@
+pipeline:
+  identifier: Build_harness_cie_lab_1706291665525
+  name: Build harness-cie-lab
+  orgIdentifier: marriott73org
+  projectIdentifier: marriottling
+  properties:
+    ci:
+      codebase:
+        build: <+input>
+        connectorRef: account.workshopgithub
+        repoName: harness-cie-lab
+  stages:
+    - stage:
+        identifier: build
+        name: build
+        spec:
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  identifier: dockerbuild
+                  name: docker_build
+                  spec:
+                    image: plugins/docker
+                    settings:
+                      dry_run: "true"
+                      repo: hello/world
+                      tags: latest
+                  timeout: ""
+                  type: Plugin
+          platform:
+            arch: Amd64
+            os: Linux
+          runtime:
+            spec: {}
+            type: Cloud
+        type: CI

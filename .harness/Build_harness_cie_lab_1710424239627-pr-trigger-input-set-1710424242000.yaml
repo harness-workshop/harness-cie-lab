@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1710424239627-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1710424239627prtriggerinputset
+  orgIdentifier: jpmcworkshop110org
+  projectIdentifier: csnehit
+  pipeline:
+    identifier: Build_harness_cie_lab_1710424239627
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

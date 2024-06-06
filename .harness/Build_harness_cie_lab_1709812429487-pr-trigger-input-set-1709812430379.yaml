@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1709812429487-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1709812429487prtriggerinputset
+  orgIdentifier: lloyds96org
+  projectIdentifier: sukypanesar
+  pipeline:
+    identifier: Build_harness_cie_lab_1709812429487
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

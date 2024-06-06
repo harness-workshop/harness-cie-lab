@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1711018180200-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1711018180200prtriggerinputset
+  orgIdentifier: workshop118org
+  projectIdentifier: Shreyas
+  pipeline:
+    identifier: Build_harness_cie_lab_1711018180200
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

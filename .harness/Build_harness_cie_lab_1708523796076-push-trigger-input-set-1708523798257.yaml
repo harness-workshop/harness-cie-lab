@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1708523796076-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1708523796076pushtriggerinputset
+  orgIdentifier: morningstar87org
+  projectIdentifier: sbhisikar
+  pipeline:
+    identifier: Build_harness_cie_lab_1708523796076
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1710365903063-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1710365903063prtriggerinputset
+  orgIdentifier: dishitplatformeng108org
+  projectIdentifier: nayanapoc
+  pipeline:
+    identifier: Build_harness_cie_lab_1710365903063
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

@@ -1,0 +1,108 @@
+pipeline:
+  identifier: Build_harness_cie_lab_1706291534309
+  name: Build harness-cie-lab-ns
+  orgIdentifier: marriott73org
+  projectIdentifier: marriottns
+  properties:
+    ci:
+      codebase:
+        build: <+input>
+        connectorRef: account.workshopgithub
+        repoName: harness-cie-lab
+  stages:
+    - stage:
+        identifier: build
+        name: build
+        spec:
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  identifier: dockerbuild
+                  name: docker_build
+                  spec:
+                    image: plugins/docker
+                    settings:
+                      dry_run: "true"
+                      repo: hello/world
+                      tags: latest
+                  timeout: ""
+                  type: Plugin
+          platform:
+            arch: Amd64
+            os: Linux
+          runtime:
+            spec: {}
+            type: Cloud
+        type: CI
+    - stage:
+        name: deploy
+        identifier: deploy
+        description: ""
+        type: Deployment
+        spec:
+          deploymentType: Kubernetes
+          execution:
+            steps:
+              - step:
+                  type: K8sRollingDeploy
+                  name: K8sRollingDeploy_1
+                  identifier: K8sRollingDeploy_1
+                  spec:
+                    skipDryRun: false
+                    pruningEnabled: false
+                  timeout: 10m
+            rollbackSteps: []
+          service:
+            serviceRef: nsservice
+          environment:
+            environmentRef: dev
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: dev
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
+    - stage:
+        name: fp1
+        identifier: fp1
+        description: ""
+        type: FeatureFlag
+        spec:
+          execution:
+            steps:
+              - step:
+                  type: FlagConfiguration
+                  name: FlagConfiguration_1
+                  identifier: FlagConfiguration_1
+                  spec:
+                    feature: <+input>
+                    environment: dev
+                    instructions: <+input>
+                  timeout: 10m
+    - stage:
+        name: test
+        identifier: test
+        description: ""
+        type: SecurityTests
+        spec:
+          cloneCodebase: true
+          platform:
+            arch: Amd64
+            os: Linux
+          runtime:
+            spec: {}
+            type: Cloud
+          execution:
+            steps:
+              - step:
+                  type: Background
+                  name: Background_1
+                  identifier: Background_1
+                  spec:
+                    shell: Sh
+                    command: mvn clean

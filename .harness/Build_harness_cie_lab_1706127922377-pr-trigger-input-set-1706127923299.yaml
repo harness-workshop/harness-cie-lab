@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1706127922377-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1706127922377prtriggerinputset
+  orgIdentifier: vivint69org
+  projectIdentifier: vivintbradentest
+  pipeline:
+    identifier: Build_harness_cie_lab_1706127922377
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1712752502973-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1712752502973prtriggerinputset
+  orgIdentifier: jpmc131org
+  projectIdentifier: Leung
+  pipeline:
+    identifier: Build_harness_cie_lab_1712752502973
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1711387026695-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1711387026695pushtriggerinputset
+  orgIdentifier: nationwide117org
+  projectIdentifier: petad1
+  pipeline:
+    identifier: Build_harness_cie_lab_1711387026695
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

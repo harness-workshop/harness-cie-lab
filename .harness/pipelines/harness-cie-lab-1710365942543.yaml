@@ -1,0 +1,46 @@
+pipeline:
+  identifier: Build_harness_cie_lab_1710365944746
+  name: Build harness-cie-lab
+  orgIdentifier: dishitplatformeng108org
+  projectIdentifier: kunaltestproject
+  properties:
+    ci:
+      codebase:
+        build: <+input>
+        connectorRef: account.workshopgithub
+        repoName: harness-cie-lab
+  stages:
+    - stage:
+        identifier: build
+        name: build
+        spec:
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  identifier: echo
+                  name: echo
+                  spec:
+                    command: echo hello world
+                  timeout: ""
+                  type: Run
+              - step:
+                  identifier: dockerbuild
+                  name: docker_build
+                  spec:
+                    image: plugins/docker
+                    settings:
+                      dry_run: "true"
+                      password: <+input>
+                      repo: hello/world
+                      tags: latest
+                      username: <+input>
+                  timeout: ""
+                  type: Plugin
+          platform:
+            arch: Amd64
+            os: Linux
+          runtime:
+            spec: {}
+            type: Cloud
+        type: CI

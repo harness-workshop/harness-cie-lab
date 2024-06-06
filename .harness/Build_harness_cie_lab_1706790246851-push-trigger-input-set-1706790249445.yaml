@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1706790246851-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1706790246851pushtriggerinputset
+  orgIdentifier: workshoptcscoe74org
+  projectIdentifier: Sujoy_Test_Harness
+  pipeline:
+    identifier: Build_harness_cie_lab_1706790246851
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

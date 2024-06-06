@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1710365903063-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1710365903063pushtriggerinputset
+  orgIdentifier: dishitplatformeng108org
+  projectIdentifier: nayanapoc
+  pipeline:
+    identifier: Build_harness_cie_lab_1710365903063
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

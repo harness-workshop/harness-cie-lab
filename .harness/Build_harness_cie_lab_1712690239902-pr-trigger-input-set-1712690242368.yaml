@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1712690239902-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1712690239902prtriggerinputset
+  orgIdentifier: yahooinc130org
+  projectIdentifier: yahooshiva
+  pipeline:
+    identifier: Build_harness_cie_lab_1712690239902
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

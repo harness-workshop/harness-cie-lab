@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1708428350163-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1708428350163pushtriggerinputset
+  orgIdentifier: workshop84org
+  projectIdentifier: advancedjlb
+  pipeline:
+    identifier: Build_harness_cie_lab_1708428350163
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

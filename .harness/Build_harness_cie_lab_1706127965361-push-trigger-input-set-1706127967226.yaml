@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1706127965361-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1706127965361pushtriggerinputset
+  orgIdentifier: vivint69org
+  projectIdentifier: vivintmatt
+  pipeline:
+    identifier: Build_harness_cie_lab_1706127965361
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

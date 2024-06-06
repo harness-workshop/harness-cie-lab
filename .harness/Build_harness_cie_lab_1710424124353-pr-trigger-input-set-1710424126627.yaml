@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1710424124353-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1710424124353prtriggerinputset
+  orgIdentifier: jpmcworkshop110org
+  projectIdentifier: josev
+  pipeline:
+    identifier: Build_harness_cie_lab_1710424124353
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

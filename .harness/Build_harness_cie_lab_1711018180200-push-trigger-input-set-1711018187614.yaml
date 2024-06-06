@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1711018180200-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1711018180200pushtriggerinputset
+  orgIdentifier: workshop118org
+  projectIdentifier: Shreyas
+  pipeline:
+    identifier: Build_harness_cie_lab_1711018180200
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

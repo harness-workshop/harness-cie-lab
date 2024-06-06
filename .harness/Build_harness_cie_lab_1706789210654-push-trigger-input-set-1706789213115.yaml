@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1706789210654-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1706789210654pushtriggerinputset
+  orgIdentifier: workshoptcscoe74org
+  projectIdentifier: TCSPrajakta
+  pipeline:
+    identifier: Build_harness_cie_lab_1706789210654
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

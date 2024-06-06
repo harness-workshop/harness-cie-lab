@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1708426740196-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1708426740196prtriggerinputset
+  orgIdentifier: workshop84org
+  projectIdentifier: Sapientharshaevuri
+  pipeline:
+    identifier: Build_harness_cie_lab_1708426740196
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

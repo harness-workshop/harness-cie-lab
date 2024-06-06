@@ -1,0 +1,101 @@
+pipeline:
+  identifier: Build_harness_cie_lab_1712879270698
+  name: Build harness-cie-lab
+  orgIdentifier: jpmc131org
+  projectIdentifier: kwanjpmc
+  properties:
+    ci:
+      codebase:
+        build: <+input>
+        connectorRef: account.workshopgithub
+        repoName: harness-cie-lab
+  stages:
+    - stage:
+        identifier: build
+        name: build
+        spec:
+          caching:
+            enabled: true
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  identifier: echo
+                  name: echo
+                  spec:
+                    command: echo hello world
+                  timeout: ""
+                  type: Run
+              - step:
+                  identifier: dockerbuild
+                  name: docker_build
+                  spec:
+                    caching: true
+                    connectorRef: <+input>
+                    repo: hello/world
+                    tags:
+                      - latest
+                  timeout: ""
+                  type: BuildAndPushDockerRegistry
+          platform:
+            arch: Amd64
+            os: Linux
+          runtime:
+            spec: {}
+            type: Cloud
+        type: CI
+    - stage:
+        name: Build and Push
+        identifier: Build_and_Push
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: account.bootcampgkecluster
+              namespace: payment-service-build
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
+          execution:
+            steps:
+              - step:
+                  type: RunTests
+                  name: Run Tests With Intelligence
+                  identifier: Run_Tests_With_Intelligence
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    image: nikpap/mvn-openjdk-8:harness
+                    language: Java
+                    buildTool: Maven
+                    args: test
+                    packages: com.nikp
+                    runOnlySelectedTests: true
+                    preCommand: cd payment-service
+                    reports:
+                      type: JUnit
+                      spec:
+                        paths:
+                          - "**/*.xml"
+                    resources:
+                      limits:
+                        memory: 2Gi
+                        cpu: "2"
+                    enableTestSplitting: false
+              - step:
+                  type: Run
+                  name: Build
+                  identifier: Build
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    image: nikpap/mvn-openjdk-8:harness
+                    shell: Sh
+                    command: |-
+                      cd payment-service
+                      mvn -Dmaven.test.skip=true clean install -X
+                    resources:
+                      limits:
+                        memory: 1Gi
+                        cpu: "1"

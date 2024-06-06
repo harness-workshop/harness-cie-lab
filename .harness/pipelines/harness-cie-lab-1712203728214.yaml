@@ -1,0 +1,33 @@
+pipeline:
+  name: Build harness-cie-lab
+  identifier: Build_harness_cie_lab_1712203764413
+  projectIdentifier: Gaurav_Thukral
+  orgIdentifier: workshopvirtusain125org
+  stages:
+    - stage:
+        name: Build
+        identifier: Build
+        type: CI
+        spec:
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Echo Welcome Message
+                  identifier: Echo_Welcome_Message
+                  spec:
+                    shell: Sh
+                    command: echo "Welcome to Harness CI"
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: account.workshopgithub
+        repoName: harness-cie-lab
+        build: <+input>

@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1707501816168-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1707501816168pushtriggerinputset
+  orgIdentifier: workjam76org
+  projectIdentifier: workjamosato
+  pipeline:
+    identifier: Build_harness_cie_lab_1707501816168
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

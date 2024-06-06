@@ -1,0 +1,37 @@
+inputSet:
+  pipeline:
+    identifier: Build_harness_cie_lab_1711027484376
+    properties:
+      ci:
+        codebase:
+          build:
+            spec:
+              branch: main
+            type: branch
+    stages:
+      - stage:
+          identifier: Deploy_to_Dev
+          type: Deployment
+          spec:
+            service:
+              serviceInputs:
+                serviceDefinition:
+                  type: Kubernetes
+                  spec:
+                    manifests:
+                      - manifest:
+                          identifier: templates
+                          type: K8sManifest
+                          spec:
+                            valuesPaths: ""
+                    artifacts:
+                      primary:
+                        primaryArtifactRef: paymentservice
+    variables:
+      - name: seusername
+        type: String
+        value: jane
+  name: jane032124
+  identifier: jane032124
+  orgIdentifier: jpmcworkshop116org
+  projectIdentifier: janetestproject

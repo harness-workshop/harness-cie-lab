@@ -1,0 +1,114 @@
+pipeline:
+  identifier: Build_harness_cie_lab_1709823978357
+  name: Build harness-cie-lab
+  orgIdentifier: marriott0307workshop98org
+  projectIdentifier: Adija
+  properties:
+    ci:
+      codebase:
+        build: <+input>
+        connectorRef: account.workshopgithub
+        repoName: harness-cie-lab
+  stages:
+    - stage:
+        identifier: build
+        name: build
+        spec:
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  identifier: echo
+                  name: echo
+                  spec:
+                    command: echo hello world
+                  timeout: ""
+                  type: Run
+              - step:
+                  identifier: dockerbuild
+                  name: docker_build
+                  spec:
+                    image: plugins/docker
+                    settings:
+                      dry_run: "true"
+                      password: <+input>
+                      repo: hello/world
+                      tags: latest
+                      username: <+input>
+                  timeout: ""
+                  type: Plugin
+          platform:
+            arch: Amd64
+            os: Linux
+          runtime:
+            spec: {}
+            type: Cloud
+        type: CI
+    - stage:
+        name: AdiTest
+        identifier: AdiTest
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: account.bootcampgkecluster
+              namespace: payment-service-build
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
+          execution:
+            steps:
+              - step:
+                  type: RunTests
+                  name: RunTests_2
+                  identifier: RunTests_2
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    image: nikpap/mvn-openjdk-8:harness
+                    language: Java
+                    buildTool: Maven
+                    args: test
+                    packages: com.nikp
+                    runOnlySelectedTests: true
+                    preCommand: cd Aditest
+                    reports:
+                      type: JUnit
+                      spec:
+                        paths:
+                          - "**/*.xml "
+                    resources:
+                      limits:
+                        memory: 2Gi
+                        cpu: "2"
+                    enableTestSplitting: false
+              - step:
+                  type: Run
+                  name: Build
+                  identifier: Build
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    image: "nikpap/mvn-openjdk-8:harness "
+                    shell: Sh
+                    command: |-
+                      cd AdiTest
+                      mvn -Dmaven.test.skip=true clean install -X
+                    resources:
+                      limits:
+                        memory: 1Gi
+                        cpu: "1"
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: ush to DockerHub
+                  identifier: ush_to_DockerHub
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    repo: nikpap/payment-service-workshop
+                    tags:
+                      - latest
+                    resources:
+                      limits:
+                        memory: 1Gi
+                        cpu: "1"

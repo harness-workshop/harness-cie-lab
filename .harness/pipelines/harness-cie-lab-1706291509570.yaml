@@ -1,0 +1,118 @@
+pipeline:
+  name: Build harness-cie-lab
+  identifier: Build_harness_cie_lab_1706291608677
+  projectIdentifier: MarriottJohn
+  orgIdentifier: marriott73org
+  stages:
+    - stage:
+        name: Build
+        identifier: Build
+        type: CI
+        spec:
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Echo Welcome Message
+                  identifier: Echo_Welcome_Message
+                  spec:
+                    shell: Sh
+                    command: echo "Welcome to Harness CI"
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud
+            spec: {}
+    - stage:
+        name: Build and Push
+        identifier: Build_and_Push
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: account.bootcampgkecluster
+              namespace: Payment-service-build
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
+          slsa_provenance:
+            enabled: false
+          execution:
+            steps:
+              - step:
+                  type: RunTests
+                  name: Run Test
+                  identifier: RunTests_1
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    image: nikpap/mvn-openjdk-8:harness
+                    language: Java
+                    buildTool: Maven
+                    args: test
+                    packages: com.nikp
+                    runOnlySelectedTests: true
+                    preCommand: cd payment-service
+                    reports:
+                      type: JUnit
+                      spec:
+                        paths:
+                          - "**/*.xml"
+                    resources:
+                      limits:
+                        memory: 2Gi
+                        cpu: "2"
+                    enableTestSplitting: false
+              - step:
+                  type: Run
+                  name: Build
+                  identifier: Build
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    image: nikpap/mvn-openjdk-8:harness
+                    shell: Sh
+                    command: |-
+                      cd payment-service
+                      mvn -Dmaven.test.skip=true clean install -X
+                    resources:
+                      limits:
+                        memory: 1Gi
+                        cpu: "1"
+              - step:
+                  name: DevX Fortify Scan
+                  identifier: Fortify
+                  template:
+                    templateRef: account.fortify_scan
+                    versionLabel: v0.1
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: Build and Push an image to Docker Registry
+                  identifier: Push_to_DockerHub
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    repo: nikpap/payment-service-workshop
+                    tags:
+                      - <+pipeline.variables.John.username>-latest
+                    optimize: true
+                    resources:
+                      limits:
+                        memory: 1Gi
+                        cpu: "1"
+              - step:
+                  name: OWASP
+                  identifier: OWASP
+                  template:
+                    templateRef: account.OWASP
+                    versionLabel: "0.01"
+        when:
+          pipelineStatus: Success
+  properties:
+    ci:
+      codebase:
+        connectorRef: account.workshopgithub
+        repoName: harness-cie-lab
+        build: <+input>

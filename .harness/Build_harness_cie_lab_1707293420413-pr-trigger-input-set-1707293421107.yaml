@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1707293420413-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1707293420413prtriggerinputset
+  orgIdentifier: michaelsorg
+  projectIdentifier: michaelsinstructor
+  pipeline:
+    identifier: Build_harness_cie_lab_1707293420413
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

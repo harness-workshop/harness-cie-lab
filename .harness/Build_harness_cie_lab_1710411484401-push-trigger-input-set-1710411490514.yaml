@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1710411484401-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1710411484401pushtriggerinputset
+  orgIdentifier: workshoptcscoe106org
+  projectIdentifier: samit
+  pipeline:
+    identifier: Build_harness_cie_lab_1710411484401
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

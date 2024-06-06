@@ -1,0 +1,43 @@
+inputSet:
+  pipeline:
+    identifier: paymentservice
+    properties:
+      ci:
+        codebase:
+          build:
+            spec:
+              branch: ""
+            type: branch
+    stages:
+      - stage:
+          identifier: Deploy_to_Dev
+          type: Deployment
+          spec:
+            service:
+              serviceInputs:
+                serviceDefinition:
+                  type: Kubernetes
+                  spec:
+                    manifests:
+                      - manifest:
+                          identifier: templates
+                          type: K8sManifest
+                          spec:
+                            valuesPaths:
+                              - harness-deploy/dev-values.yaml
+                    artifacts:
+                      primary:
+                        primaryArtifactRef: paymentservice
+                        sources:
+                          - identifier: paymentservice
+                            type: DockerRegistry
+                            spec:
+                              tag: ""
+    variables:
+      - name: seusername
+        type: String
+        value: punithn
+  name: punith
+  identifier: punith
+  orgIdentifier: breadfinancial233org
+  projectIdentifier: punithn

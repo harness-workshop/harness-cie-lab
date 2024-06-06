@@ -1,0 +1,67 @@
+pipeline:
+  identifier: Build_harness_cie_lab_1708532373832
+  name: Build harness-cie-lab
+  orgIdentifier: marriott88org
+  projectIdentifier: marriottsm
+  properties:
+    ci:
+      codebase:
+        build: <+input>
+        connectorRef: account.workshopgithub
+        repoName: harness-cie-lab
+  stages:
+    - stage:
+        identifier: build
+        name: build
+        spec:
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  identifier: echo
+                  name: echo
+                  spec:
+                    command: echo hello world
+                  timeout: ""
+                  type: Run
+              - step:
+                  name: Fortify
+                  identifier: Fortify
+                  template:
+                    templateRef: account.fortify_scan
+                    versionLabel: v0.1
+              - step:
+                  name: sm
+                  identifier: sm
+                  template:
+                    templateRef: account.OWASP
+                    versionLabel: "0.01"
+              - step:
+                  identifier: dockerbuild
+                  name: docker_build
+                  spec:
+                    image: plugins/docker
+                    settings:
+                      dry_run: "true"
+                      password: <+input>
+                      repo: hello/world
+                      tags: latest
+                      username: <+input>
+                  timeout: ""
+                  type: Plugin
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushDockerRegistry_1
+                  identifier: BuildAndPushDockerRegistry_1
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    repo: nikpap/payment-service-workshop
+                    tags:
+                      - sm-latest
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Docker
+            spec: {}
+        type: CI

@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1711027277399-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1711027277399prtriggerinputset
+  orgIdentifier: jpmcworkshop116org
+  projectIdentifier: taylorgray
+  pipeline:
+    identifier: Build_harness_cie_lab_1711027277399
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

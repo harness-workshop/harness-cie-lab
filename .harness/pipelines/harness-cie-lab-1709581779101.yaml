@@ -1,0 +1,241 @@
+pipeline:
+  identifier: Build_harness_cie_lab_1709581784240
+  name: Build harness-cie-lab
+  orgIdentifier: morningstar94org
+  projectIdentifier: ejazTest
+  properties:
+    ci:
+      codebase:
+        build: <+input>
+        connectorRef: account.workshopgithub
+        repoName: harness-cie-lab
+  stages:
+    - stage:
+        name: Build and push edited
+        identifier: Build_and_push
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: account.bootcampgkecluster
+              namespace: "payment-service-build "
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
+          execution:
+            steps:
+              - step:
+                  type: Background
+                  name: DIND
+                  identifier: DIND
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    image: docker:dind
+                    shell: Sh
+                    privileged: true
+              - step:
+                  type: RunTests
+                  name: Run Tests With Intelligence
+                  identifier: Run_Tests_With_Intelligence
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    image: "nikpap/mvn-openjdk-8:harness "
+                    language: Java
+                    buildTool: Maven
+                    args: "test "
+                    packages: "com.nikp "
+                    runOnlySelectedTests: true
+                    preCommand: cd payment-service
+                    reports:
+                      type: JUnit
+                      spec:
+                        paths:
+                          - "**/*.xml"
+                    resources:
+                      limits:
+                        memory: 2Gi
+                        cpu: "2"
+                    enableTestSplitting: false
+              - step:
+                  type: Run
+                  name: Build
+                  identifier: Build
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    image: "nikpap/mvn-openjdk-8:harness "
+                    shell: Sh
+                    command: |
+                      cd payment-service
+                      mvn -Dmaven.test.skip=true clean install -X
+                    resources:
+                      limits:
+                        memory: "1Gi "
+                        cpu: "1"
+              - step:
+                  type: Owasp
+                  name: OWASP
+                  identifier: OWASP
+                  spec:
+                    mode: orchestration
+                    config: default
+                    target:
+                      type: repository
+                      name: paymentservice
+                      variant: main
+                    advanced:
+                      log:
+                        level: info
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: Push to DockerHub
+                  identifier: Push_to_DockerHub
+                  spec:
+                    connectorRef: account.bootcampdockerhub
+                    repo: nikpap/payment-service-workshop
+                    tags:
+                      - ejaz-latest
+                    optimize: true
+                    resources:
+                      limits:
+                        memory: 1Gi
+                        cpu: "1"
+          sharedPaths:
+            - /var/run
+          caching:
+            enabled: false
+            paths: []
+    - stage:
+        name: Approval
+        identifier: Approval
+        description: ""
+        type: Approval
+        spec:
+          execution:
+            steps:
+              - step:
+                  name: Approval
+                  identifier: Approval
+                  type: HarnessApproval
+                  timeout: 1d
+                  spec:
+                    approvalMessage: |-
+                      Please review the following information
+                      and approve the pipeline progression
+                    includePipelineExecutionHistory: true
+                    approvers:
+                      minimumCount: 1
+                      disallowPipelineExecutor: false
+                      userGroups:
+                        - org._organization_all_users
+                    isAutoRejectEnabled: false
+                    approverInputs: []
+        tags: {}
+    - stage:
+        name: Deploy to Dev
+        identifier: Deploy_to_Dev
+        description: ""
+        type: Deployment
+        spec:
+          deploymentType: Kubernetes
+          service:
+            serviceRef: paymentservice1
+            serviceInputs:
+              serviceDefinition:
+                type: Kubernetes
+                spec:
+                  manifests:
+                    - manifest:
+                        identifier: templates
+                        type: K8sManifest
+                        spec:
+                          valuesPaths: <+input>
+          environment:
+            environmentRef: Dev
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: K8s
+          execution:
+            steps:
+              - stepGroup:
+                  name: Canary Deployment
+                  identifier: canaryDepoyment
+                  steps:
+                    - step:
+                        type: Policy
+                        name: Policy - No Critical CVEs
+                        identifier: Policy_No_Critical_CVEs
+                        spec:
+                          policySets:
+                            - Criticals_Not_Allowed
+                          type: Custom
+                          policySpec:
+                            payload: |-
+                              {"JAVA_OSS_CRITICAL_COUN
+                              T":
+                              <+pipeline.stages.Build_
+                              and_Push.spec.execution.
+                              steps.OWASP.output.outpu
+                              tVariables.CRITICAL>}
+                        timeout: 10m
+                    - step:
+                        name: Canary Deployment
+                        identifier: canaryDeployment
+                        type: K8sCanaryDeploy
+                        timeout: 10m
+                        spec:
+                          instanceSelection:
+                            type: Count
+                            spec:
+                              count: 1
+                          skipDryRun: false
+                    - step:
+                        name: Canary Delete
+                        identifier: canaryDelete
+                        type: K8sCanaryDelete
+                        timeout: 10m
+                        spec: {}
+              - stepGroup:
+                  name: Primary Deployment
+                  identifier: primaryDepoyment
+                  steps:
+                    - step:
+                        name: Rolling Deployment
+                        identifier: rollingDeployment
+                        type: K8sRollingDeploy
+                        timeout: 10m
+                        spec:
+                          skipDryRun: false
+            rollbackSteps:
+              - step:
+                  name: Canary Delete
+                  identifier: rollbackCanaryDelete
+                  type: K8sCanaryDelete
+                  timeout: 10m
+                  spec: {}
+              - step:
+                  name: Rolling Rollback
+                  identifier: rollingRollback
+                  type: K8sRollingRollback
+                  timeout: 10m
+                  spec: {}
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
+  variables:
+    - name: seusername
+      type: String
+      description: ""
+      required: true
+      value: <+input>
+    - name: clientkey
+      type: String
+      description: ""
+      required: true
+      value: <+input>

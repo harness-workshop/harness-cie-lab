@@ -1,0 +1,38 @@
+inputSet:
+  pipeline:
+    identifier: Build_harness_cie_lab_1710367836194
+    properties:
+      ci:
+        codebase:
+          build:
+            spec:
+              branch: main
+            type: branch
+    stages:
+      - stage:
+          identifier: Deploy_to_Dev
+          type: Deployment
+          spec:
+            service:
+              serviceInputs:
+                serviceDefinition:
+                  type: Kubernetes
+                  spec:
+                    manifests:
+                      - manifest:
+                          identifier: templates
+                          type: K8sManifest
+                          spec:
+                            valuesPaths:
+                              - harness-deploy/dev-values.yaml
+                    artifacts:
+                      primary:
+                        primaryArtifactRef: paymentservice
+    variables:
+      - name: seusername
+        type: String
+        value: kulwindersingh
+  name: payment-service-inputset
+  identifier: paymentserviceinputset
+  orgIdentifier: dishitplatformeng108org
+  projectIdentifier: kulwinderpoc

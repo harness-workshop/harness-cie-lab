@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1706790429703-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1706790429703prtriggerinputset
+  orgIdentifier: workshoptcscoe74org
+  projectIdentifier: ss_project
+  pipeline:
+    identifier: Build_harness_cie_lab_1706790429703
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1709529949578-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1709529949578prtriggerinputset
+  orgIdentifier: workshopwipro92org
+  projectIdentifier: WipHarWor
+  pipeline:
+    identifier: Build_harness_cie_lab_1709529949578
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

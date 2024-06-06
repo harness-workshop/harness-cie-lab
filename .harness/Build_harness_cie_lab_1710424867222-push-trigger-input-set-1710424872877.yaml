@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1710424867222-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1710424867222pushtriggerinputset
+  orgIdentifier: jpmcworkshop110org
+  projectIdentifier: NicL
+  pipeline:
+    identifier: Build_harness_cie_lab_1710424867222
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

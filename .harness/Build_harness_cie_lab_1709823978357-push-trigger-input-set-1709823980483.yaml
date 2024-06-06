@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1709823978357-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1709823978357pushtriggerinputset
+  orgIdentifier: marriott0307workshop98org
+  projectIdentifier: Adija
+  pipeline:
+    identifier: Build_harness_cie_lab_1709823978357
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

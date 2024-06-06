@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1712886124338-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1712886124338prtriggerinputset
+  orgIdentifier: jpmc131org
+  projectIdentifier: kwan1
+  pipeline:
+    identifier: Build_harness_cie_lab_1712886124338
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

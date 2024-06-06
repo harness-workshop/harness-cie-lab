@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1710424219322-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1710424219322prtriggerinputset
+  orgIdentifier: jpmcworkshop110org
+  projectIdentifier: eliseogarcia
+  pipeline:
+    identifier: Build_harness_cie_lab_1710424219322
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

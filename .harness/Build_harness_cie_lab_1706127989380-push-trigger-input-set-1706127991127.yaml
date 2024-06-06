@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1706127989380-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1706127989380pushtriggerinputset
+  orgIdentifier: vivint69org
+  projectIdentifier: vivinttrevorsbitcoinminer
+  pipeline:
+    identifier: Build_harness_cie_lab_1706127989380
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

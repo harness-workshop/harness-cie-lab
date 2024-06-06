@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1712886124338-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1712886124338pushtriggerinputset
+  orgIdentifier: jpmc131org
+  projectIdentifier: kwan1
+  pipeline:
+    identifier: Build_harness_cie_lab_1712886124338
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

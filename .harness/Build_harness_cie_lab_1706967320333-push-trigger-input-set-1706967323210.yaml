@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1706967320333-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1706967320333pushtriggerinputset
+  orgIdentifier: workshoptcscoe74org
+  projectIdentifier: debtestci1
+  pipeline:
+    identifier: Build_harness_cie_lab_1706967320333
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

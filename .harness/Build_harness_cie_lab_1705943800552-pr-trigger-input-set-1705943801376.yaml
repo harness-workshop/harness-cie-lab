@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1705943800552-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1705943800552prtriggerinputset
+  orgIdentifier: devtechworkshop67org
+  projectIdentifier: devtechTN
+  pipeline:
+    identifier: Build_harness_cie_lab_1705943800552
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

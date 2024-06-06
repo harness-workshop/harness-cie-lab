@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1706291559950-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1706291559950pushtriggerinputset
+  orgIdentifier: marriott73org
+  projectIdentifier: marriottxyz
+  pipeline:
+    identifier: Build_harness_cie_lab_1706291559950
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

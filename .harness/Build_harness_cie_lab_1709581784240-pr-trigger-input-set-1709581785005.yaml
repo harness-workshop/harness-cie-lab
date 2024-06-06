@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1709581784240-pr-trigger-input-set
+  identifier: Build_harness_cie_lab_1709581784240prtriggerinputset
+  orgIdentifier: morningstar94org
+  projectIdentifier: ejazTest
+  pipeline:
+    identifier: Build_harness_cie_lab_1709581784240
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

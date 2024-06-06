@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1710424124353-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1710424124353pushtriggerinputset
+  orgIdentifier: jpmcworkshop110org
+  projectIdentifier: josev
+  pipeline:
+    identifier: Build_harness_cie_lab_1710424124353
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

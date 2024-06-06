@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1709532534194-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1709532534194pushtriggerinputset
+  orgIdentifier: workshopwipro92org
+  projectIdentifier: wipromadhav0403
+  pipeline:
+    identifier: Build_harness_cie_lab_1709532534194
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>

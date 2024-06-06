@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_harness_cie_lab_1712203701581-push-trigger-input-set
+  identifier: Build_harness_cie_lab_1712203701581pushtriggerinputset
+  orgIdentifier: workshopvirtusain125org
+  projectIdentifier: Nandlal_Kumar_Kamat
+  pipeline:
+    identifier: Build_harness_cie_lab_1712203701581
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>
